@@ -1,0 +1,11 @@
+use_frameworks!
+
+target 'Salsa20Cipher_Example' do
+  pod 'Salsa20Cipher', :path => '../'
+
+  target 'Salsa20Cipher_Tests' do
+    inherit! :search_paths
+
+    
+  end
+end
