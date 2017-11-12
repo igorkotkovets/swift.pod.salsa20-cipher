@@ -8,8 +8,8 @@
 
 Pod::Spec.new do |s|
   s.name             = 'Salsa20Cipher'
-  s.version          = '0.1.0'
-  s.summary          = 'A short description of Salsa20Cipher.'
+  s.version          = '0.8.0'
+  s.summary          = 'Salsa20 cipher library written on Swift language.'
 
 # This description is used to generate tags and improve search results.
 #   * Think: What does it do? Why did you write it? What is the focus?
@@ -18,25 +18,20 @@ Pod::Spec.new do |s|
 #   * Finally, don't worry about the indent, CocoaPods strips it!
 
   s.description      = <<-DESC
-TODO: Add long description of the pod here.
+Salsa20 is a stream cipher submitted to eSTREAM by Daniel J. Bernstein.
+It is built on a pseudorandom function based on add-rotate-xor operations.
+Specification is available at https://cr.yp.to/snuffle/spec.pdf
+
                        DESC
 
-  s.homepage         = 'https://github.com/Igor Kotkovets/Salsa20Cipher'
-  # s.screenshots     = 'www.example.com/screenshots_1', 'www.example.com/screenshots_2'
+  s.homepage         = 'https://github.com/Igor Kotkovets/swift.pod.salsa20-cipher'
   s.license          = { :type => 'MIT', :file => 'LICENSE' }
   s.author           = { 'Igor Kotkovets' => 'igorkotkovets@users.noreply.github.com' }
-  s.source           = { :git => 'https://github.com/Igor Kotkovets/Salsa20Cipher.git', :tag => s.version.to_s }
-  # s.social_media_url = 'https://twitter.com/<TWITTER_USERNAME>'
+  s.source           = { :git => 'https://github.com/Igor Kotkovets/swift.pod.salsa20-cipher.git', :tag => s.version.to_s }
 
   s.ios.deployment_target = '8.0'
 
-  s.source_files = 'Salsa20Cipher/Classes/**/*'
-  
-  # s.resource_bundles = {
-  #   'Salsa20Cipher' => ['Salsa20Cipher/Assets/*.png']
-  # }
-
-  # s.public_header_files = 'Pod/Classes/**/*.h'
-  # s.frameworks = 'UIKit', 'MapKit'
-  # s.dependency 'AFNetworking', '~> 2.3'
+  s.source_files = 'Salsa20Cipher/Classes/**/*.swift'
+  s.preserve_paths = 'Sources/CommonCrypto/module.modulemap'
+  s.xcconfig = { 'SWIFT_INCLUDE_PATHS' => '$(PODS_ROOT)/../../Salsa20Cipher/Classes/CommonCrypto' }
 end
