@@ -26,7 +26,7 @@ class Salsa20ExpansionFunctionTests: XCTestCase {
             let expected = testVector.expectBuffer()
             let result = UnsafeMutablePointer<UInt8>.allocate(capacity: 64)
             result.initialize(to: 0, count: 64)
-            cryptor.updateState()
+            cryptor.salsa20()
             cryptor.state.withMemoryRebound(to: UInt8.self, capacity: 64) { (bytes) -> Void in
                 for i in 0..<64 {
                     assertPairsEqual(expected: expected[i], actual: bytes[i], message: " index \(i)")

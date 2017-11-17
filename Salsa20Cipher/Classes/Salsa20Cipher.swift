@@ -88,30 +88,6 @@ public class Salsa20Cipher {
         index = 0
     }
 
-    func updateState() {
-        let xstate = UnsafeMutablePointer<UInt32>.allocate(capacity: 16)
-        xstate.initialize(from: state, count: 16)
-
-        for _ in 0..<10 {
-            Salsa20Cipher.quarterRound(ptr0: xstate+00, ptr1: xstate+04, ptr2: xstate+08, ptr3: xstate+12)
-            Salsa20Cipher.quarterRound(ptr0: xstate+05, ptr1: xstate+09, ptr2: xstate+13, ptr3: xstate+01)
-            Salsa20Cipher.quarterRound(ptr0: xstate+10, ptr1: xstate+14, ptr2: xstate+02, ptr3: xstate+06)
-            Salsa20Cipher.quarterRound(ptr0: xstate+15, ptr1: xstate+03, ptr2: xstate+07, ptr3: xstate+11)
-
-            Salsa20Cipher.quarterRound(ptr0: xstate+00, ptr1: xstate+01, ptr2: xstate+02, ptr3: xstate+03)
-            Salsa20Cipher.quarterRound(ptr0: xstate+05, ptr1: xstate+06, ptr2: xstate+07, ptr3: xstate+04)
-            Salsa20Cipher.quarterRound(ptr0: xstate+10, ptr1: xstate+11, ptr2: xstate+08, ptr3: xstate+09)
-            Salsa20Cipher.quarterRound(ptr0: xstate+15, ptr1: xstate+12, ptr2: xstate+13, ptr3: xstate+14)
-        }
-
-        for i in 0..<16 {
-            xstate[i] = xstate[i]&+state[i]
-            Salsa20Cipher.write(xstate+i, to: (state+i))
-        }
-
-        xstate.deallocate(capacity: 16)
-    }
-
     func salsa20() {
         let xstate = UnsafeMutablePointer<UInt32>.allocate(capacity: 16)
         xstate.initialize(from: state, count: 16)
@@ -122,7 +98,7 @@ public class Salsa20Cipher {
 
         for i in 0..<16 {
             xstate[i] = xstate[i]&+state[i]
-            Salsa20Cipher.write(xstate+i, to: state)
+            Salsa20Cipher.write(xstate+i, to: (state+i))
         }
 
         xstate.deallocate(capacity: 16)
@@ -136,7 +112,8 @@ public class Salsa20Cipher {
         let value: UInt8
 
         if index == 0 {
-            updateState()
+            salsa20()
+            incrementCounter()
         }
 
         value = Salsa20Cipher.read(state+(index/4), position: (index%4))
@@ -144,6 +121,13 @@ public class Salsa20Cipher {
         index = (index + 1) & 0x3F
 
         return value
+    }
+
+    func incrementCounter() {
+        state[8] = state[8] &+ 1
+        if (state[8] == 0) {
+            state[9] = state[9] &+ 1
+        }
     }
 
     func getShort() -> UInt16 {
