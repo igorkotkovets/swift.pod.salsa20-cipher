@@ -21,14 +21,12 @@ public class Salsa20CipherStream: InputStream {
     var eofReached = false
     var inputStream: InputStream
     var cipher: Salsa20Cipher?
-    var keyData: Data
 
     public var hasBytesAvailable: Bool {
         return !eofReached
     }
 
     public init?(withStream: InputStream, key: Data, iv vector: Data) throws {
-        self.keyData = key
         self.inputStream = withStream
         if key.count == 0 {
             throw CipherError.emptyKeyData

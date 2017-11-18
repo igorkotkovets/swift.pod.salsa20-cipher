@@ -117,7 +117,6 @@ public class Salsa20Cipher {
         }
 
         value = Salsa20Cipher.read(state+(index/4), position: (index%4))
-
         index = (index + 1) & 0x3F
 
         return value
