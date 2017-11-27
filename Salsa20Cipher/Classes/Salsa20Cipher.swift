@@ -146,7 +146,7 @@ public class Salsa20Cipher {
 
         value |= UInt32(getByte()<<24)
         value |= UInt32(getByte()<<16)
-        value |= UInt32(getByte()<<8)
+        value |= UInt32(getByte()<<08)
         value |= UInt32(getByte())
 
         return value
@@ -230,8 +230,8 @@ extension Salsa20Cipher {
                              ptr1: UnsafeMutablePointer<UInt32>,
                              ptr2: UnsafeMutablePointer<UInt32>,
                              ptr3: UnsafeMutablePointer<UInt32>) {
-        ptr1.pointee ^= rotl(value: ptr0.pointee&+ptr3.pointee, shift: 7)
-        ptr2.pointee ^= rotl(value: ptr1.pointee&+ptr0.pointee, shift: 9)
+        ptr1.pointee ^= rotl(value: ptr0.pointee&+ptr3.pointee, shift: 07)
+        ptr2.pointee ^= rotl(value: ptr1.pointee&+ptr0.pointee, shift: 09)
         ptr3.pointee ^= rotl(value: ptr2.pointee&+ptr1.pointee, shift: 13)
         ptr0.pointee ^= rotl(value: ptr3.pointee&+ptr2.pointee, shift: 18)
     }
