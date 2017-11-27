@@ -12,33 +12,36 @@ import CommonCrypto
 
 public class Salsa20Cipher {
     enum Salsa20CryptorError: Error {
-        case emptyKey
+        case invalidKeySize
+        case invalidIVSize
     }
     static let SIGMA: [UInt32] = [0x61707865, 0x3320646E, 0x79622D32, 0x6B206574]
-    static let TAU: [UInt32] = []
+    static let TAU: [UInt32] = [0x61707865, 0x3120646e, 0x79622d36, 0x6b206574]
     var index = 0
     var state: UnsafeMutablePointer<UInt32>
 
     public init?(withKey: Data, iv vector: Data) throws {
         guard withKey.count == 16 || withKey.count == 32 else {
-            throw Salsa20CryptorError.emptyKey
+            throw Salsa20CryptorError.invalidKeySize
         }
 
         state = UnsafeMutablePointer<UInt32>.allocate(capacity: 16)
         state.initialize(to: 0, count: 16)
-
         withKey.withUnsafeBytes { (bytes: UnsafePointer<UInt8>) -> Void in
             if withKey.count == 32 {
                 set32BytesKey(bytes)
             } else if withKey.count == 16 {
-
+                set16BytesKey(bytes)
             }
+        }
+
+        guard vector.count == 8 else {
+            throw Salsa20CryptorError.invalidIVSize
         }
 
         vector.withUnsafeBytes { bytes -> Void in
             setIV(bytes)
         }
-//        setIV([0xE8, 0x30, 0x09, 0x4B, 0x97, 0x20, 0x5D, 0x2A])
     }
 
     deinit {
@@ -46,40 +49,40 @@ public class Salsa20Cipher {
     }
 
     func set32BytesKey(_ key: UnsafePointer<UInt8>) {
-        state[00] = Salsa20Cipher.SIGMA[0]
+        state[00] = Salsa20Cipher.SIGMA[00]
         state[01] = Salsa20Cipher.read(key+00)
         state[02] = Salsa20Cipher.read(key+04)
         state[03] = Salsa20Cipher.read(key+08)
         state[04] = Salsa20Cipher.read(key+12)
-        state[05] = Salsa20Cipher.SIGMA[1]
-        state[10] = Salsa20Cipher.SIGMA[2]
+        state[05] = Salsa20Cipher.SIGMA[01]
+        state[10] = Salsa20Cipher.SIGMA[02]
         state[11] = Salsa20Cipher.read(key+16)
         state[12] = Salsa20Cipher.read(key+20)
         state[13] = Salsa20Cipher.read(key+24)
         state[14] = Salsa20Cipher.read(key+28)
-        state[15] = Salsa20Cipher.SIGMA[3]
+        state[15] = Salsa20Cipher.SIGMA[03]
     }
 
     func set16BytesKey(_ key: UnsafePointer<UInt8>) {
-        state[00] = Salsa20Cipher.SIGMA[0]
+        state[00] = Salsa20Cipher.TAU[00]
         state[01] = Salsa20Cipher.read(key+00)
         state[02] = Salsa20Cipher.read(key+04)
         state[03] = Salsa20Cipher.read(key+08)
         state[04] = Salsa20Cipher.read(key+12)
-        state[05] = Salsa20Cipher.SIGMA[1]
-        state[10] = Salsa20Cipher.SIGMA[2]
+        state[05] = Salsa20Cipher.TAU[01]
+        state[10] = Salsa20Cipher.TAU[02]
         state[11] = Salsa20Cipher.read(key+16)
         state[12] = Salsa20Cipher.read(key+20)
         state[13] = Salsa20Cipher.read(key+24)
         state[14] = Salsa20Cipher.read(key+28)
-        state[15] = Salsa20Cipher.SIGMA[3]
+        state[15] = Salsa20Cipher.TAU[03]
     }
 
     func setIV(_ vector: UnsafePointer<UInt8>) {
-        state[06] = Salsa20Cipher.read(vector+0)
-        state[07] = Salsa20Cipher.read(vector+4)
-        state[08] = Salsa20Cipher.read(vector+8)
-        state[09] = Salsa20Cipher.read(vector+12)
+        state[06] = Salsa20Cipher.read(vector+00)
+        state[07] = Salsa20Cipher.read(vector+04)
+        state[08] = 0
+        state[09] = 0
     }
 
     public func reset() {

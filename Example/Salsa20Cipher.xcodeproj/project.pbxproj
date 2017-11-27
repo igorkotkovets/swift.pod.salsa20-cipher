@@ -19,11 +19,9 @@
 		D8C1D0B41FB8E67F00DF4EAB /* OpenText.txt in Resources */ = {isa = PBXBuildFile; fileRef = D8C1D09D1FB8E61100DF4EAB /* OpenText.txt */; };
 		D8C1D0B51FB8E67F00DF4EAB /* Salsa20CipherDataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8C1D0991FB8E61100DF4EAB /* Salsa20CipherDataTests.swift */; };
 		D8C1D0B61FB8E67F00DF4EAB /* Salsa20CipherTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8C1D09A1FB8E61100DF4EAB /* Salsa20CipherTests.swift */; };
-		D8C1D0B71FB8E67F00DF4EAB /* Salsa20ExpansionFunctionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8C1D0A21FB8E61200DF4EAB /* Salsa20ExpansionFunctionTests.swift */; };
 		D8C1D0B81FB8E67F00DF4EAB /* Salsa20HashFunctionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8C1D09E1FB8E61100DF4EAB /* Salsa20HashFunctionTests.swift */; };
 		D8C1D0B91FB8E67F00DF4EAB /* SalsaCipherStreamTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8C1D0A01FB8E61100DF4EAB /* SalsaCipherStreamTests.swift */; };
 		D8C1D0BA1FB8E67F00DF4EAB /* TestConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8C1D09F1FB8E61100DF4EAB /* TestConstants.swift */; };
-		D8C1D0BB1FB8E67F00DF4EAB /* TestSalsa20ExpansionVector.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8C1D09C1FB8E61100DF4EAB /* TestSalsa20ExpansionVector.swift */; };
 		D8C1D0BC1FB8E67F00DF4EAB /* TestSalsa20HashVectors.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8C1D0A31FB8E61200DF4EAB /* TestSalsa20HashVectors.swift */; };
 		D8C1D0BD1FB8E67F00DF4EAB /* TestVectors.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8C1D09B1FB8E61100DF4EAB /* TestVectors.swift */; };
 		DD4CBE1BFBDF4EF15B087E44 /* Pods_Salsa20Cipher_Example.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1EA6DAD2C689BF8725226EFA /* Pods_Salsa20Cipher_Example.framework */; };
@@ -62,13 +60,11 @@
 		D8C1D0991FB8E61100DF4EAB /* Salsa20CipherDataTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Salsa20CipherDataTests.swift; sourceTree = "<group>"; };
 		D8C1D09A1FB8E61100DF4EAB /* Salsa20CipherTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Salsa20CipherTests.swift; sourceTree = "<group>"; };
 		D8C1D09B1FB8E61100DF4EAB /* TestVectors.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestVectors.swift; sourceTree = "<group>"; };
-		D8C1D09C1FB8E61100DF4EAB /* TestSalsa20ExpansionVector.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestSalsa20ExpansionVector.swift; sourceTree = "<group>"; };
 		D8C1D09D1FB8E61100DF4EAB /* OpenText.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = OpenText.txt; sourceTree = "<group>"; };
 		D8C1D09E1FB8E61100DF4EAB /* Salsa20HashFunctionTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Salsa20HashFunctionTests.swift; sourceTree = "<group>"; };
 		D8C1D09F1FB8E61100DF4EAB /* TestConstants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestConstants.swift; sourceTree = "<group>"; };
 		D8C1D0A01FB8E61100DF4EAB /* SalsaCipherStreamTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SalsaCipherStreamTests.swift; sourceTree = "<group>"; };
 		D8C1D0A11FB8E61200DF4EAB /* FileInputStreamTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileInputStreamTests.swift; sourceTree = "<group>"; };
-		D8C1D0A21FB8E61200DF4EAB /* Salsa20ExpansionFunctionTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Salsa20ExpansionFunctionTests.swift; sourceTree = "<group>"; };
 		D8C1D0A31FB8E61200DF4EAB /* TestSalsa20HashVectors.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestSalsa20HashVectors.swift; sourceTree = "<group>"; };
 		E691E1E083BF489EB358F798 /* Pods-Salsa20Cipher_Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Salsa20Cipher_Tests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Salsa20Cipher_Tests/Pods-Salsa20Cipher_Tests.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -156,11 +152,9 @@
 				D8C1D09D1FB8E61100DF4EAB /* OpenText.txt */,
 				D8C1D0991FB8E61100DF4EAB /* Salsa20CipherDataTests.swift */,
 				D8C1D09A1FB8E61100DF4EAB /* Salsa20CipherTests.swift */,
-				D8C1D0A21FB8E61200DF4EAB /* Salsa20ExpansionFunctionTests.swift */,
 				D8C1D09E1FB8E61100DF4EAB /* Salsa20HashFunctionTests.swift */,
 				D8C1D0A01FB8E61100DF4EAB /* SalsaCipherStreamTests.swift */,
 				D8C1D09F1FB8E61100DF4EAB /* TestConstants.swift */,
-				D8C1D09C1FB8E61100DF4EAB /* TestSalsa20ExpansionVector.swift */,
 				D8C1D0A31FB8E61200DF4EAB /* TestSalsa20HashVectors.swift */,
 				D8C1D09B1FB8E61100DF4EAB /* TestVectors.swift */,
 				607FACE91AFB9204008FA782 /* Supporting Files */,
@@ -425,8 +419,6 @@
 			files = (
 				D8C1D0BC1FB8E67F00DF4EAB /* TestSalsa20HashVectors.swift in Sources */,
 				D8C1D0B81FB8E67F00DF4EAB /* Salsa20HashFunctionTests.swift in Sources */,
-				D8C1D0B71FB8E67F00DF4EAB /* Salsa20ExpansionFunctionTests.swift in Sources */,
-				D8C1D0BB1FB8E67F00DF4EAB /* TestSalsa20ExpansionVector.swift in Sources */,
 				D8C1D0B31FB8E67F00DF4EAB /* FileInputStreamTests.swift in Sources */,
 				D8C1D0B61FB8E67F00DF4EAB /* Salsa20CipherTests.swift in Sources */,
 				D8C1D0BD1FB8E67F00DF4EAB /* TestVectors.swift in Sources */,

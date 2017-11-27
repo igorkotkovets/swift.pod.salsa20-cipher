@@ -108,6 +108,25 @@ class SalsaCipherStreamTests: XCTestCase {
         let originText = String(data: originData, encoding: .utf8)
         assertPairsEqual(expected: TestConstants.text, actual: originText ?? "")
     }
+
+    func testVectorWith16BytesKey() {
+        assertNoThrow({
+            encryptStream = try Salsa20CipherStream(withStream: dataStream, key: TestVector4.key, iv: TestVector4.iv)
+            let length = TestConstants.textLength
+            let cipherBuffer = UnsafeMutablePointer<UInt8>.allocate(capacity: length)
+            let cipherReadBytes = encryptStream.read(cipherBuffer, maxLength: length)
+            assertPairsEqual(expected: length, actual: cipherReadBytes)
+            let cipherData = Data(bytes: cipherBuffer, count: cipherReadBytes)
+            let cipherDataStream = DataInputStream(withData: cipherData)
+            decryptStream = try Salsa20CipherStream(withStream: cipherDataStream, key: TestVector4.key, iv: TestVector4.iv)
+            let originBuffer = UnsafeMutablePointer<UInt8>.allocate(capacity: length)
+            let originReadBytes = decryptStream.read(originBuffer, maxLength: length)
+            assertPairsEqual(expected: length, actual: originReadBytes)
+            let originData = Data(bytes: originBuffer, count: originReadBytes)
+            let originText = String(data: originData, encoding: .utf8)
+            assertPairsEqual(expected: TestConstants.text, actual: originText ?? "")
+        })
+    }
     
     
 }

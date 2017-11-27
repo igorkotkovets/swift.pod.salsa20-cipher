@@ -9,10 +9,6 @@ import Foundation
 
 //http://www.ecrypt.eu.org/stream/svn/viewcvs.cgi/ecrypt/trunk/submissions/salsa20/full/verified.test-vectors?logsort=rev&rev=210&view=markup
 public class Salsa20CipherStream: InputStream {
-    enum CipherError: Error {
-        case emptyKeyData
-    }
-
     let blockSize = 64
     var inputBuffer: UnsafeMutablePointer<UInt8>
     var outputBuffer: UnsafeMutablePointer<UInt8>
@@ -28,10 +24,6 @@ public class Salsa20CipherStream: InputStream {
 
     public init?(withStream: InputStream, key: Data, iv vector: Data) throws {
         self.inputStream = withStream
-        if key.count == 0 {
-            throw CipherError.emptyKeyData
-        }
-
         cipher = try Salsa20Cipher(withKey: key, iv: vector)
         inputBuffer = UnsafeMutablePointer.allocate(capacity: blockSize)
         outputBuffer = UnsafeMutablePointer.allocate(capacity: blockSize)
