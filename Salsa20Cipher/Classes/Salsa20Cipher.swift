@@ -10,6 +10,12 @@
 import Foundation
 import CommonCrypto
 
+public enum SalsaRounds: Int {
+    case salsa20_20 = 10
+    case salsa20_12 = 6
+    case salsa20_8 = 4
+}
+
 public class Salsa20Cipher {
     enum Salsa20CryptorError: Error {
         case invalidKeySize
@@ -19,8 +25,11 @@ public class Salsa20Cipher {
     static let TAU: [UInt32] = [0x61707865, 0x3120646e, 0x79622d36, 0x6b206574]
     var index = 0
     var state: UnsafeMutablePointer<UInt32>
+    let rounds: SalsaRounds
 
-    public init?(withKey: Data, iv vector: Data) throws {
+    public init?(withKey: Data, iv vector: Data, rounds: SalsaRounds = .salsa20_20) throws {
+        self.rounds = rounds
+
         guard withKey.count == 16 || withKey.count == 32 else {
             throw Salsa20CryptorError.invalidKeySize
         }
@@ -40,7 +49,7 @@ public class Salsa20Cipher {
         }
 
         vector.withUnsafeBytes { bytes -> Void in
-            setIV(bytes)
+            set8BytesIV(bytes)
         }
     }
 
@@ -65,20 +74,20 @@ public class Salsa20Cipher {
 
     func set16BytesKey(_ key: UnsafePointer<UInt8>) {
         state[00] = Salsa20Cipher.TAU[00]
-        state[01] = Salsa20Cipher.read(key+00)
-        state[02] = Salsa20Cipher.read(key+04)
-        state[03] = Salsa20Cipher.read(key+08)
-        state[04] = Salsa20Cipher.read(key+12)
+        state[01] = Salsa20Cipher.read(key+00, count: 2)
+        state[02] = Salsa20Cipher.read(key+02, count: 2)
+        state[03] = Salsa20Cipher.read(key+04, count: 2)
+        state[04] = Salsa20Cipher.read(key+06, count: 2)
         state[05] = Salsa20Cipher.TAU[01]
         state[10] = Salsa20Cipher.TAU[02]
-        state[11] = Salsa20Cipher.read(key+16)
-        state[12] = Salsa20Cipher.read(key+20)
-        state[13] = Salsa20Cipher.read(key+24)
-        state[14] = Salsa20Cipher.read(key+28)
+        state[11] = Salsa20Cipher.read(key+08, count: 2)
+        state[12] = Salsa20Cipher.read(key+10, count: 2)
+        state[13] = Salsa20Cipher.read(key+12, count: 2)
+        state[14] = Salsa20Cipher.read(key+14, count: 2)
         state[15] = Salsa20Cipher.TAU[03]
     }
 
-    func setIV(_ vector: UnsafePointer<UInt8>) {
+    func set8BytesIV(_ vector: UnsafePointer<UInt8>) {
         state[06] = Salsa20Cipher.read(vector+00)
         state[07] = Salsa20Cipher.read(vector+04)
         state[08] = 0
@@ -95,7 +104,7 @@ public class Salsa20Cipher {
         let xstate = UnsafeMutablePointer<UInt32>.allocate(capacity: 16)
         xstate.initialize(from: state, count: 16)
 
-        for _ in 0..<10 {
+        for _ in 0..<rounds.rawValue {
             Salsa20Cipher.doubleRound(xstate)
         }
 
@@ -161,7 +170,8 @@ public class Salsa20Cipher {
 
 extension Salsa20Cipher {
     static func salsa20Hash(input inBuffer: UnsafePointer<UInt8>,
-                            output outBuffer: UnsafeMutablePointer<UInt8>) {
+                            output outBuffer: UnsafeMutablePointer<UInt8>,
+                            rounds: SalsaRounds = SalsaRounds.salsa20_20) {
         let in32Buffer = UnsafeMutablePointer<UInt32>.allocate(capacity: 16)
         for i in 0..<16 {
             in32Buffer[i] = read(inBuffer+i*4)
@@ -171,11 +181,12 @@ extension Salsa20Cipher {
     }
 
     static func salsa20Hash(input inBuffer: UnsafePointer<UInt32>,
-                            output outBuffer: UnsafeMutablePointer<UInt8>) {
+                            output outBuffer: UnsafeMutablePointer<UInt8>,
+                            rounds: SalsaRounds = SalsaRounds.salsa20_20) {
         let xstate = UnsafeMutablePointer<UInt32>.allocate(capacity: 16)
         xstate.initialize(from: inBuffer, count: 16)
 
-        for _ in 0..<10 {
+        for _ in 0..<rounds.rawValue {
             doubleRound(xstate)
         }
 
@@ -201,13 +212,12 @@ extension Salsa20Cipher {
         buffer.pointee = uint32Ptr.pointee
     }
 
-    static func read(_ uint8Ptr: UnsafePointer<UInt8>) -> UInt32 {
+    static func read(_ uint8Ptr: UnsafePointer<UInt8>, count: Int = 4) -> UInt32 {
         var uint32: UInt32 = 0
         withUnsafeMutableBytes(of: &uint32) { uint32Ptr -> Void in
-            uint32Ptr[0] = uint8Ptr[0]
-            uint32Ptr[1] = uint8Ptr[1]
-            uint32Ptr[2] = uint8Ptr[2]
-            uint32Ptr[3] = uint8Ptr[3]
+            for i in 0..<count {
+                uint32Ptr[i] = uint8Ptr[i]
+            }
         }
         return uint32
     }
