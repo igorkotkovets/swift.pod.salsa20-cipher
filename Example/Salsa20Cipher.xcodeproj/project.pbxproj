@@ -24,6 +24,7 @@
 		D8C1D0BA1FB8E67F00DF4EAB /* TestConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8C1D09F1FB8E61100DF4EAB /* TestConstants.swift */; };
 		D8C1D0BC1FB8E67F00DF4EAB /* TestSalsa20HashVectors.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8C1D0A31FB8E61200DF4EAB /* TestSalsa20HashVectors.swift */; };
 		D8C1D0BD1FB8E67F00DF4EAB /* TestVectors.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8C1D09B1FB8E61100DF4EAB /* TestVectors.swift */; };
+		D8DD585E1FCC86BA00F13F5D /* ApiTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8DD585D1FCC86BA00F13F5D /* ApiTests.swift */; };
 		DD4CBE1BFBDF4EF15B087E44 /* Pods_Salsa20Cipher_Example.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1EA6DAD2C689BF8725226EFA /* Pods_Salsa20Cipher_Example.framework */; };
 /* End PBXBuildFile section */
 
@@ -66,6 +67,7 @@
 		D8C1D0A01FB8E61100DF4EAB /* SalsaCipherStreamTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SalsaCipherStreamTests.swift; sourceTree = "<group>"; };
 		D8C1D0A11FB8E61200DF4EAB /* FileInputStreamTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileInputStreamTests.swift; sourceTree = "<group>"; };
 		D8C1D0A31FB8E61200DF4EAB /* TestSalsa20HashVectors.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestSalsa20HashVectors.swift; sourceTree = "<group>"; };
+		D8DD585D1FCC86BA00F13F5D /* ApiTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApiTests.swift; sourceTree = "<group>"; };
 		E691E1E083BF489EB358F798 /* Pods-Salsa20Cipher_Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Salsa20Cipher_Tests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Salsa20Cipher_Tests/Pods-Salsa20Cipher_Tests.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -147,6 +149,7 @@
 			isa = PBXGroup;
 			children = (
 				D8C1D0971FB8E61100DF4EAB /* ByteOrderTests.swift */,
+				D8DD585D1FCC86BA00F13F5D /* ApiTests.swift */,
 				D8C1D0981FB8E61100DF4EAB /* DataInputStreamTests.swift */,
 				D8C1D0A11FB8E61200DF4EAB /* FileInputStreamTests.swift */,
 				D8C1D09D1FB8E61100DF4EAB /* OpenText.txt */,
@@ -424,6 +427,7 @@
 				D8C1D0BD1FB8E67F00DF4EAB /* TestVectors.swift in Sources */,
 				D8C1D0BA1FB8E67F00DF4EAB /* TestConstants.swift in Sources */,
 				D8C1D0B51FB8E67F00DF4EAB /* Salsa20CipherDataTests.swift in Sources */,
+				D8DD585E1FCC86BA00F13F5D /* ApiTests.swift in Sources */,
 				D8C1D0B91FB8E67F00DF4EAB /* SalsaCipherStreamTests.swift in Sources */,
 				D8C1D0B21FB8E67F00DF4EAB /* DataInputStreamTests.swift in Sources */,
 				D8C1D0B11FB8E67F00DF4EAB /* ByteOrderTests.swift in Sources */,

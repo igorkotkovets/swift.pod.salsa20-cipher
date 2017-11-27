@@ -40,7 +40,7 @@ public class Salsa20CipherStream: InputStream {
 
         while remaining > 0 {
             if bufferOffset >= bufferSize {
-                if process() == false {
+                if processInputData() == false {
                     return len - remaining
                 }
             }
@@ -56,7 +56,7 @@ public class Salsa20CipherStream: InputStream {
         return len
     }
 
-    func process() -> Bool {
+    func processInputData() -> Bool {
         if eofReached {
             return false
         }
