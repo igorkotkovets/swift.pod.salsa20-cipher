@@ -33,3 +33,22 @@ public class DataInputStream: InputStream {
         return existentData
     }
 }
+
+public class DataOutputStream: OutputStream {
+    public private(set) var data: Data = Data()
+
+    public var hasSpaceAvailable: Bool {
+        return true
+    }
+
+    public init() {
+    }
+
+    public func write(_ buffer: UnsafePointer<UInt8>, maxLength len: Int) throws -> Int {
+        data.append(buffer, count: len)
+        return len
+    }
+
+    public func close() throws {
+    }
+}
