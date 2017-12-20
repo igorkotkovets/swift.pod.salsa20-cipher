@@ -8,12 +8,11 @@
 // https://botan.randombit.net/doxygen/salsa20_8cpp_source.html Crypto and TLS for C++11
 //https://courses.csail.mit.edu/6.857/2016/files/salsa20.py
 import Foundation
-import CommonCrypto
 
 public enum SalsaRounds: Int {
-    case salsa20_20 = 10
-    case salsa20_12 = 6
-    case salsa20_8 = 4
+    case salsa2020 = 10
+    case salsa2012 = 6
+    case salsa2008 = 4
 }
 
 public class Salsa20Cipher {
@@ -27,7 +26,7 @@ public class Salsa20Cipher {
     var state: UnsafeMutablePointer<UInt32>
     let rounds: SalsaRounds
 
-    public init?(withKey: Data, iv vector: Data, rounds: SalsaRounds = .salsa20_20) throws {
+    public init?(withKey: Data, iv vector: Data, rounds: SalsaRounds = .salsa2020) throws {
         self.rounds = rounds
 
         guard withKey.count == 16 || withKey.count == 32 else {
@@ -136,7 +135,7 @@ public class Salsa20Cipher {
 
     func incrementCounter() {
         state[8] = state[8] &+ 1
-        if (state[8] == 0) {
+        if state[8] == 0 {
             state[9] = state[9] &+ 1
         }
     }
@@ -171,7 +170,7 @@ public class Salsa20Cipher {
 extension Salsa20Cipher {
     static func salsa20Hash(input inBuffer: UnsafePointer<UInt8>,
                             output outBuffer: UnsafeMutablePointer<UInt8>,
-                            rounds: SalsaRounds = SalsaRounds.salsa20_20) {
+                            rounds: SalsaRounds = SalsaRounds.salsa2020) {
         let in32Buffer = UnsafeMutablePointer<UInt32>.allocate(capacity: 16)
         for i in 0..<16 {
             in32Buffer[i] = read(inBuffer+i*4)
@@ -182,7 +181,7 @@ extension Salsa20Cipher {
 
     static func salsa20Hash(input inBuffer: UnsafePointer<UInt32>,
                             output outBuffer: UnsafeMutablePointer<UInt8>,
-                            rounds: SalsaRounds = SalsaRounds.salsa20_20) {
+                            rounds: SalsaRounds = SalsaRounds.salsa2020) {
         let xstate = UnsafeMutablePointer<UInt32>.allocate(capacity: 16)
         xstate.initialize(from: inBuffer, count: 16)
 
