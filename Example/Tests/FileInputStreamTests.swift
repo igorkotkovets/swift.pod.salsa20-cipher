@@ -11,15 +11,10 @@ import CleanTests
 import Salsa20Cipher
 
 class FileInputStreamTests: XCTestCase {
-    var fileStream: FileInputStream!
-
-    override func setUp() {
-        super.setUp()
-        let fileHandle: FileHandle! = FileHandle(forReadingAtPath: TestConstants.filePath)
-        fileStream = FileInputStream(withFileHandle: fileHandle)
-    }
     
     func testRead() {
+        let fileHandle: FileHandle! = FileHandle(forReadingAtPath: TestConstants.filePath)
+        let fileStream = FileInputStream(withFileHandle: fileHandle)
         let len = TestConstants.textLength - 100
         let rawPointer = UnsafeMutableRawPointer.allocate(bytes: len, alignedTo: MemoryLayout<UInt8>.alignment)
         let pointer = rawPointer.initializeMemory(as: UInt8.self, to: 0)
@@ -34,7 +29,43 @@ class FileInputStreamTests: XCTestCase {
         rawPointer.deallocate(bytes: len, alignedTo: MemoryLayout<UInt8>.alignment)
     }
 
+    func testReadFileAtURL() {
+        let fileStream = FileInputStream(withUrl: TestConstants.fileURL)
+        assertNotNil(fileStream)
+        let len = TestConstants.textLength - 100
+        let rawPointer = UnsafeMutableRawPointer.allocate(bytes: len, alignedTo: MemoryLayout<UInt8>.alignment)
+        let pointer = rawPointer.initializeMemory(as: UInt8.self, to: 0)
+        let readBytes = fileStream!.read(pointer, maxLength: len)
+        assertPairsEqual(expected: len, actual: readBytes)
+        let readData = Data(bytes: pointer, count: readBytes)
+        let readText = String(data: readData, encoding: .utf8)!
+
+        let originTextData = TestConstants.textData[0..<len]
+        let originText = String(data: originTextData, encoding: .utf8)!
+        assertPairsEqual(expected: originText, actual: readText)
+        rawPointer.deallocate(bytes: len, alignedTo: MemoryLayout<UInt8>.alignment)
+    }
+
+    func testReadFileAtPath() {
+        let fileStream = FileInputStream(withPath: TestConstants.filePath)
+        assertNotNil(fileStream)
+        let len = TestConstants.textLength - 100
+        let rawPointer = UnsafeMutableRawPointer.allocate(bytes: len, alignedTo: MemoryLayout<UInt8>.alignment)
+        let pointer = rawPointer.initializeMemory(as: UInt8.self, to: 0)
+        let readBytes = fileStream!.read(pointer, maxLength: len)
+        assertPairsEqual(expected: len, actual: readBytes)
+        let readData = Data(bytes: pointer, count: readBytes)
+        let readText = String(data: readData, encoding: .utf8)!
+
+        let originTextData = TestConstants.textData[0..<len]
+        let originText = String(data: originTextData, encoding: .utf8)!
+        assertPairsEqual(expected: originText, actual: readText)
+        rawPointer.deallocate(bytes: len, alignedTo: MemoryLayout<UInt8>.alignment)
+    }
+
     func testDataAvailable() {
+        let fileHandle: FileHandle! = FileHandle(forReadingAtPath: TestConstants.filePath)
+        var fileStream = FileInputStream(withFileHandle: fileHandle)
         var readData = Data()
         let len = 100
         let rawPointer = UnsafeMutableRawPointer.allocate(bytes: len, alignedTo: MemoryLayout<UInt8>.alignment)

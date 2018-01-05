@@ -9,6 +9,6 @@ end
 target 'Salsa20Cipher_Tests' do
   inherit! :search_paths
   pod 'Salsa20Cipher', :path => '../'
-  #  pod 'CleanTests', :git => 'https://github.com/igorkotkovets/pod.swift.clean-tests.git'
-  pod 'CleanTests', :path => '../../swift.pod.clean-tests'
+  pod 'CleanTests', :git => 'https://github.com/igorkotkovets/pod.swift.clean-tests.git'
+#  pod 'CleanTests', :path => '../../swift.pod.clean-tests'
 end

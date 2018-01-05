@@ -10,6 +10,7 @@ import Foundation
 
 struct TestConstants {
     static let filePath: String! = Bundle(for: FileInputStreamTests.self).path(forResource: "OpenText", ofType: "txt")
+    static let fileURL: URL! = Bundle(for: FileInputStreamTests.self).url(forResource: "OpenText", withExtension: "txt")
     static let text: String = try! String(contentsOfFile: filePath)
     static let textData: Data! = text.data(using: .utf8)
     static let textLength = text.count

@@ -15,6 +15,20 @@ public class FileInputStream: InputStream {
         self.fileHandle = withFileHandle
     }
 
+    public convenience init?(withPath path: String) {
+        guard let fHandle = FileHandle(forReadingAtPath: path) else {
+            return nil
+        }
+        self.init(withFileHandle: fHandle)
+    }
+
+    public convenience init?(withUrl url: URL) {
+        guard let fHandle = try? FileHandle(forReadingFrom: url) else {
+            return nil
+        }
+        self.init(withFileHandle: fHandle)
+    }
+
     public var hasBytesAvailable: Bool {
         return !eofReached
     }
