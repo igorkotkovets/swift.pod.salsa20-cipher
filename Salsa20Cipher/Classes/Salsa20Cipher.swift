@@ -9,24 +9,29 @@
 //https://courses.csail.mit.edu/6.857/2016/files/salsa20.py
 import Foundation
 
-public enum SalsaRounds: Int {
-    case salsa2020 = 10
-    case salsa2012 = 6
-    case salsa2008 = 4
+public protocol RandomStream {
+    func xor(input inBuffer: UnsafePointer<UInt8>, output outBuffer: UnsafeMutablePointer<UInt8>, length: Int)
 }
 
-public class Salsa20Cipher {
+public class Salsa20Cipher: RandomStream {
     enum Salsa20CryptorError: Error {
         case invalidKeySize
         case invalidIVSize
     }
+
+    public enum Rounds: Int {
+        case salsa2020 = 10
+        case salsa2012 = 6
+        case salsa2008 = 4
+    }
+
     static let SIGMA: [UInt32] = [0x61707865, 0x3320646E, 0x79622D32, 0x6B206574]
     static let TAU: [UInt32] = [0x61707865, 0x3120646e, 0x79622d36, 0x6b206574]
     var index = 0
     var state: UnsafeMutablePointer<UInt32>
-    let rounds: SalsaRounds
+    let rounds: Rounds
 
-    public init?(withKey: Data, iv vector: Data, rounds: SalsaRounds = .salsa2020) throws {
+    public init?(withKey: Data, iv vector: Data, rounds: Rounds = .salsa2020) throws {
         self.rounds = rounds
 
         guard withKey.count == 16 || withKey.count == 32 else {
@@ -160,7 +165,7 @@ public class Salsa20Cipher {
         return value
     }
 
-    func xor(input inBuffer: UnsafePointer<UInt8>, output outBuffer: UnsafeMutablePointer<UInt8>, length: Int) {
+    public func xor(input inBuffer: UnsafePointer<UInt8>, output outBuffer: UnsafeMutablePointer<UInt8>, length: Int) {
         for i in 0..<length {
             outBuffer[i] = inBuffer[i]^getByte()
         }
@@ -170,7 +175,7 @@ public class Salsa20Cipher {
 extension Salsa20Cipher {
     static func salsa20Hash(input inBuffer: UnsafePointer<UInt8>,
                             output outBuffer: UnsafeMutablePointer<UInt8>,
-                            rounds: SalsaRounds = SalsaRounds.salsa2020) {
+                            rounds: Rounds = Rounds.salsa2020) {
         let in32Buffer = UnsafeMutablePointer<UInt32>.allocate(capacity: 16)
         for i in 0..<16 {
             in32Buffer[i] = read(inBuffer+i*4)
@@ -181,7 +186,7 @@ extension Salsa20Cipher {
 
     static func salsa20Hash(input inBuffer: UnsafePointer<UInt32>,
                             output outBuffer: UnsafeMutablePointer<UInt8>,
-                            rounds: SalsaRounds = SalsaRounds.salsa2020) {
+                            rounds: Rounds = Rounds.salsa2020) {
         let xstate = UnsafeMutablePointer<UInt32>.allocate(capacity: 16)
         xstate.initialize(from: inBuffer, count: 16)
 
