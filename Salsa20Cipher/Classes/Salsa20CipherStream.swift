@@ -16,7 +16,7 @@ public class Salsa20CipherStream: InputStream {
     var bufferOffset = 0
     var eofReached = false
     var inputStream: InputStream
-    var cipher: Salsa20Cipher?
+    var cipher: Salsa20Cipher!
 
     public var hasBytesAvailable: Bool {
         return !eofReached
@@ -69,7 +69,7 @@ public class Salsa20CipherStream: InputStream {
         if inputBytes < blockSize {
             eofReached = true
         }
-        cipher?.encrypt(input: inputBuffer, output: outputBuffer, length: inputBytes)
+        cipher.encrypt(input: inputBuffer, output: outputBuffer, length: inputBytes)
         bufferSize += inputBytes
         return true
     }

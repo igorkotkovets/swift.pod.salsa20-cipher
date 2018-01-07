@@ -9,11 +9,12 @@
 //https://courses.csail.mit.edu/6.857/2016/files/salsa20.py
 import Foundation
 
-public protocol RandomStream {
+public protocol RandomGenerator {
     func xor(input inBuffer: UnsafePointer<UInt8>, output outBuffer: UnsafeMutablePointer<UInt8>, length: Int)
+    func get<ReturnType: FixedWidthInteger>() -> ReturnType
 }
 
-public class Salsa20Cipher: RandomStream {
+public class Salsa20Cipher {
     enum Salsa20CryptorError: Error {
         case invalidKeySize
         case invalidIVSize
@@ -142,32 +143,6 @@ public class Salsa20Cipher: RandomStream {
         state[8] = state[8] &+ 1
         if state[8] == 0 {
             state[9] = state[9] &+ 1
-        }
-    }
-
-    func getShort() -> UInt16 {
-        var value: UInt16 = 0
-
-        value |= UInt16(getByte() << 8)
-        value |= UInt16(getByte())
-
-        return value
-    }
-
-    func getInt() -> UInt32 {
-        var value: UInt32 = 0
-
-        value |= UInt32(getByte()<<24)
-        value |= UInt32(getByte()<<16)
-        value |= UInt32(getByte()<<08)
-        value |= UInt32(getByte())
-
-        return value
-    }
-
-    public func xor(input inBuffer: UnsafePointer<UInt8>, output outBuffer: UnsafeMutablePointer<UInt8>, length: Int) {
-        for i in 0..<length {
-            outBuffer[i] = inBuffer[i]^getByte()
         }
     }
 }
@@ -328,5 +303,28 @@ extension Salsa20Cipher {
             let byte1 = Data(bytes: (bytes+1), count: 1)
             print("\(byte0.hexString) \(byte1.hexString)")
         }
+    }
+}
+
+extension Salsa20Cipher: RandomGenerator {
+    public func xor(input inBuffer: UnsafePointer<UInt8>, output outBuffer: UnsafeMutablePointer<UInt8>, length: Int) {
+        for i in 0..<length {
+            outBuffer[i] = inBuffer[i]^getByte()
+        }
+    }
+
+    public func get<ReturnType: FixedWidthInteger>() -> ReturnType {
+        var result: ReturnType = 0
+
+        withUnsafeMutablePointer(to: &result) { ptr -> Void in
+            let count = MemoryLayout<ReturnType>.size
+            ptr.withMemoryRebound(to: UInt8.self, capacity: count) { (byte) -> Void in
+                for i in 0..<count {
+                    (byte+i).pointee = getByte()
+                }
+            }
+        }
+
+        return result
     }
 }
