@@ -12,6 +12,7 @@ import Foundation
 public protocol RandomGenerator {
     func xor(input inBuffer: UnsafePointer<UInt8>, output outBuffer: UnsafeMutablePointer<UInt8>, length: Int)
     func get<ReturnType: FixedWidthInteger>() -> ReturnType
+    func reset()
 }
 
 public class Salsa20Cipher {
@@ -26,11 +27,11 @@ public class Salsa20Cipher {
         case salsa2008 = 4
     }
 
-    static let SIGMA: [UInt32] = [0x61707865, 0x3320646E, 0x79622D32, 0x6B206574]
-    static let TAU: [UInt32] = [0x61707865, 0x3120646e, 0x79622d36, 0x6b206574]
+    public static let SIGMA: [UInt32] = [0x61707865, 0x3320646E, 0x79622D32, 0x6B206574]
+    public static let TAU: [UInt32] = [0x61707865, 0x3120646e, 0x79622d36, 0x6b206574]
+    public let rounds: Rounds
     var index = 0
     var state: UnsafeMutablePointer<UInt32>
-    let rounds: Rounds
 
     public init?(withKey: Data, iv vector: Data, rounds: Rounds = .salsa2020) throws {
         self.rounds = rounds
@@ -97,12 +98,6 @@ public class Salsa20Cipher {
         state[07] = Salsa20Cipher.read(vector+04)
         state[08] = 0
         state[09] = 0
-    }
-
-    public func reset() {
-        state[08] = 0
-        state[09] = 0
-        index = 0
     }
 
     func salsa20() {
@@ -315,7 +310,6 @@ extension Salsa20Cipher: RandomGenerator {
 
     public func get<ReturnType: FixedWidthInteger>() -> ReturnType {
         var result: ReturnType = 0
-
         withUnsafeMutablePointer(to: &result) { ptr -> Void in
             let count = MemoryLayout<ReturnType>.size
             ptr.withMemoryRebound(to: UInt8.self, capacity: count) { (byte) -> Void in
@@ -326,5 +320,11 @@ extension Salsa20Cipher: RandomGenerator {
         }
 
         return result
+    }
+
+    public func reset() {
+        state[08] = 0
+        state[09] = 0
+        index = 0
     }
 }
