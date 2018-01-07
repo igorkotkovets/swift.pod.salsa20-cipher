@@ -4,21 +4,26 @@ PODS:
   - SwiftLint (0.24.0)
 
 DEPENDENCIES:
-  - CleanTests (from `../../swift.pod.clean-tests`)
+  - CleanTests (from `https://github.com/igorkotkovets/pod.swift.clean-tests.git`)
   - Salsa20Cipher (from `../`)
   - SwiftLint
 
 EXTERNAL SOURCES:
   CleanTests:
-    :path: ../../swift.pod.clean-tests
+    :git: https://github.com/igorkotkovets/pod.swift.clean-tests.git
   Salsa20Cipher:
     :path: ../
+
+CHECKOUT OPTIONS:
+  CleanTests:
+    :commit: 1551d200108c985e2ba840626b8e42502033fafd
+    :git: https://github.com/igorkotkovets/pod.swift.clean-tests.git
 
 SPEC CHECKSUMS:
   CleanTests: e2e362a43f787a346c023b93a3b2471f87481aab
   Salsa20Cipher: 8316d90fab806994ad64e08ab9ab6a1f611b10be
   SwiftLint: a014c92b4664e8b13f380f8640a51bb1733778ba
 
-PODFILE CHECKSUM: 7047d37ec6fef218a168046a1329f207790593c6
+PODFILE CHECKSUM: d2a3f29f5cd332f0466bbbbb45cdc6f394ece631
 
 COCOAPODS: 1.3.1
