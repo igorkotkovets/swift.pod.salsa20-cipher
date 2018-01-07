@@ -8,7 +8,7 @@
 import Foundation
 
 //http://www.ecrypt.eu.org/stream/svn/viewcvs.cgi/ecrypt/trunk/submissions/salsa20/full/verified.test-vectors?logsort=rev&rev=210&view=markup
-public class Salsa20CipherStream: InputStream {
+public class Salsa20Stream: InputStream {
     let blockSize = 64
     var inputBuffer: UnsafeMutablePointer<UInt8>
     var outputBuffer: UnsafeMutablePointer<UInt8>
@@ -94,7 +94,7 @@ public extension Data {
 
         let dataStream = DataInputStream(withData: self)
         do {
-            let salsa20Stream = try Salsa20CipherStream(withStream: dataStream, key: keyData, iv: ivData)
+            let salsa20Stream = try Salsa20Stream(withStream: dataStream, key: keyData, iv: ivData)
             var resultData = Data(count: self.count)
             var readLength: Int?
             resultData.withUnsafeMutableBytes { (bytes: UnsafeMutablePointer<UInt8>) -> Void in

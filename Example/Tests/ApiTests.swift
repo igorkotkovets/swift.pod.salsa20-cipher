@@ -28,7 +28,7 @@ class ApiTests: XCTestCase {
             let stream = FileInputStream(withFileHandle: fileHandle)
             let key = Data(count: 16)
             let iv = Data(count: 8)
-            _ = try Salsa20CipherStream(withStream: stream, key: key, iv: iv)
+            _ = try Salsa20Stream(withStream: stream, key: key, iv: iv)
         } catch {
 
         }

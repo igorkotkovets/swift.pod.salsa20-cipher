@@ -11,8 +11,8 @@ import CleanTests
 import Salsa20Cipher
 
 class SalsaCipherStreamTests: XCTestCase {
-    var encryptStream: Salsa20CipherStream!
-    var decryptStream: Salsa20CipherStream!
+    var encryptStream: Salsa20Stream!
+    var decryptStream: Salsa20Stream!
     var dataStream: DataInputStream!
 
     override func setUp() {
@@ -44,7 +44,7 @@ class SalsaCipherStreamTests: XCTestCase {
 
     func testEncryptDecryptData() {
         assertNoThrow( {
-            encryptStream = try Salsa20CipherStream(withStream: dataStream, key: TestConstants.keyData, iv: TestConstants.ivData)
+            encryptStream = try Salsa20Stream(withStream: dataStream, key: TestConstants.keyData, iv: TestConstants.ivData)
         })
 
         let length = TestConstants.textLength
@@ -56,7 +56,7 @@ class SalsaCipherStreamTests: XCTestCase {
 
         let cipherDataStream = DataInputStream(withData: cipherData)
         assertNoThrow( {
-            decryptStream = try Salsa20CipherStream(withStream: cipherDataStream, key: TestConstants.keyData, iv: TestConstants.ivData)
+            decryptStream = try Salsa20Stream(withStream: cipherDataStream, key: TestConstants.keyData, iv: TestConstants.ivData)
         })
         let originBufferRaw = UnsafeMutableRawPointer.allocate(bytes: length, alignedTo: MemoryLayout<UInt8>.alignment)
         let originBuffer = originBufferRaw.initializeMemory(as: UInt8.self, to: 0)
@@ -69,7 +69,7 @@ class SalsaCipherStreamTests: XCTestCase {
 
     func testVecrot0() {
         assertNoThrow( {
-            encryptStream = try Salsa20CipherStream(withStream: dataStream, key: TestVector0.key, iv: TestVector0.iv)
+            encryptStream = try Salsa20Stream(withStream: dataStream, key: TestVector0.key, iv: TestVector0.iv)
         })
         let length = TestConstants.textLength
         let cipherBuffer = UnsafeMutablePointer<UInt8>.allocate(capacity: length)
@@ -78,7 +78,7 @@ class SalsaCipherStreamTests: XCTestCase {
         let cipherData = Data(bytes: cipherBuffer, count: cipherReadBytes)
         let cipherDataStream = DataInputStream(withData: cipherData)
         assertNoThrow( {
-            decryptStream = try Salsa20CipherStream(withStream: cipherDataStream, key: TestVector0.key, iv: TestVector0.iv)
+            decryptStream = try Salsa20Stream(withStream: cipherDataStream, key: TestVector0.key, iv: TestVector0.iv)
         })
         let originBuffer = UnsafeMutablePointer<UInt8>.allocate(capacity: length)
         let originReadBytes = decryptStream.read(originBuffer, maxLength: length)
@@ -90,7 +90,7 @@ class SalsaCipherStreamTests: XCTestCase {
 
     func testVecrot1() {
         assertNoThrow( {
-            encryptStream = try Salsa20CipherStream(withStream: dataStream, key: TestVector1.key, iv: TestVector1.iv)
+            encryptStream = try Salsa20Stream(withStream: dataStream, key: TestVector1.key, iv: TestVector1.iv)
         })
         let length = TestConstants.textLength
         let cipherBuffer = UnsafeMutablePointer<UInt8>.allocate(capacity: length)
@@ -99,7 +99,7 @@ class SalsaCipherStreamTests: XCTestCase {
         let cipherData = Data(bytes: cipherBuffer, count: cipherReadBytes)
         let cipherDataStream = DataInputStream(withData: cipherData)
         assertNoThrow( {
-            decryptStream = try Salsa20CipherStream(withStream: cipherDataStream, key: TestVector1.key, iv: TestVector1.iv)
+            decryptStream = try Salsa20Stream(withStream: cipherDataStream, key: TestVector1.key, iv: TestVector1.iv)
         })
         let originBuffer = UnsafeMutablePointer<UInt8>.allocate(capacity: length)
         let originReadBytes = decryptStream.read(originBuffer, maxLength: length)
@@ -111,14 +111,14 @@ class SalsaCipherStreamTests: XCTestCase {
 
     func testVectorWith16BytesKey() {
         assertNoThrow({
-            encryptStream = try Salsa20CipherStream(withStream: dataStream, key: TestVector4.key, iv: TestVector4.iv)
+            encryptStream = try Salsa20Stream(withStream: dataStream, key: TestVector4.key, iv: TestVector4.iv)
             let length = TestConstants.textLength
             let cipherBuffer = UnsafeMutablePointer<UInt8>.allocate(capacity: length)
             let cipherReadBytes = encryptStream.read(cipherBuffer, maxLength: length)
             assertPairsEqual(expected: length, actual: cipherReadBytes)
             let cipherData = Data(bytes: cipherBuffer, count: cipherReadBytes)
             let cipherDataStream = DataInputStream(withData: cipherData)
-            decryptStream = try Salsa20CipherStream(withStream: cipherDataStream, key: TestVector4.key, iv: TestVector4.iv)
+            decryptStream = try Salsa20Stream(withStream: cipherDataStream, key: TestVector4.key, iv: TestVector4.iv)
             let originBuffer = UnsafeMutablePointer<UInt8>.allocate(capacity: length)
             let originReadBytes = decryptStream.read(originBuffer, maxLength: length)
             assertPairsEqual(expected: length, actual: originReadBytes)
