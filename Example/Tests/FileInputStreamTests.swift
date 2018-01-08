@@ -30,20 +30,22 @@ class FileInputStreamTests: XCTestCase {
     }
 
     func testReadFileAtURL() {
-        let fileStream = FileInputStream(withUrl: TestConstants.fileURL)
-        assertNotNil(fileStream)
-        let len = TestConstants.textLength - 100
-        let rawPointer = UnsafeMutableRawPointer.allocate(bytes: len, alignedTo: MemoryLayout<UInt8>.alignment)
-        let pointer = rawPointer.initializeMemory(as: UInt8.self, to: 0)
-        let readBytes = fileStream!.read(pointer, maxLength: len)
-        assertPairsEqual(expected: len, actual: readBytes)
-        let readData = Data(bytes: pointer, count: readBytes)
-        let readText = String(data: readData, encoding: .utf8)!
+        assertNoThrow({
+            let fileStream = try FileInputStream(withUrl: TestConstants.fileURL)
+            assertNotNil(fileStream)
+            let len = TestConstants.textLength - 100
+            let rawPointer = UnsafeMutableRawPointer.allocate(bytes: len, alignedTo: MemoryLayout<UInt8>.alignment)
+            let pointer = rawPointer.initializeMemory(as: UInt8.self, to: 0)
+            let readBytes = fileStream.read(pointer, maxLength: len)
+            assertPairsEqual(expected: len, actual: readBytes)
+            let readData = Data(bytes: pointer, count: readBytes)
+            let readText = String(data: readData, encoding: .utf8)!
 
-        let originTextData = TestConstants.textData[0..<len]
-        let originText = String(data: originTextData, encoding: .utf8)!
-        assertPairsEqual(expected: originText, actual: readText)
-        rawPointer.deallocate(bytes: len, alignedTo: MemoryLayout<UInt8>.alignment)
+            let originTextData = TestConstants.textData[0..<len]
+            let originText = String(data: originTextData, encoding: .utf8)!
+            assertPairsEqual(expected: originText, actual: readText)
+            rawPointer.deallocate(bytes: len, alignedTo: MemoryLayout<UInt8>.alignment)
+        })
     }
 
     func testReadFileAtPath() {

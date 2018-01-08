@@ -22,10 +22,8 @@ public class FileInputStream: InputStream {
         self.init(withFileHandle: fHandle)
     }
 
-    public convenience init?(withUrl url: URL) {
-        guard let fHandle = try? FileHandle(forReadingFrom: url) else {
-            return nil
-        }
+    public convenience init(withUrl url: URL) throws {
+        let fHandle = try FileHandle(forReadingFrom: url)
         self.init(withFileHandle: fHandle)
     }
 
