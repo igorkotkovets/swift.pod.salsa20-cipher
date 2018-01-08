@@ -480,13 +480,13 @@ class Salsa20CipherTests: XCTestCase {
         let encryptedBytes = UnsafeMutablePointer<UInt8>.allocate(capacity: dataLength)
         encryptedBytes.initialize(to: 0, count: dataLength)
         TestVector0.stream.withUnsafeBytes { (bytes: UnsafePointer<UInt8>) -> Void in
-            cryptor.encrypt(input: bytes, output: encryptedBytes, length: dataLength)
+            cryptor.xor(input: bytes, output: encryptedBytes, length: dataLength)
         }
 
         let decryptor: Salsa20Cipher! = try! Salsa20Cipher(withKey: TestVector0.key, iv: TestVector0.iv)
         let decryptedBytes = UnsafeMutablePointer<UInt8>.allocate(capacity: dataLength)
         decryptedBytes.initialize(to: 0, count: dataLength)
-        decryptor.encrypt(input: encryptedBytes, output: decryptedBytes, length: dataLength)
+        decryptor.xor(input: encryptedBytes, output: decryptedBytes, length: dataLength)
         let decryptedResult = Data(bytes: decryptedBytes, count: dataLength)
         assertPairsEqual(expected: TestVector0.stream, actual: decryptedResult)
     }
@@ -497,13 +497,13 @@ class Salsa20CipherTests: XCTestCase {
         let encryptedBytes = UnsafeMutablePointer<UInt8>.allocate(capacity: dataLength)
         encryptedBytes.initialize(to: 0, count: dataLength)
         TestVector1.stream.withUnsafeBytes { (bytes: UnsafePointer<UInt8>) -> Void in
-            cryptor.encrypt(input: bytes, output: encryptedBytes, length: dataLength)
+            cryptor.xor(input: bytes, output: encryptedBytes, length: dataLength)
         }
 
         let decryptor: Salsa20Cipher! = try! Salsa20Cipher(withKey: TestVector1.key, iv: TestVector1.iv)
         let decryptedBytes = UnsafeMutablePointer<UInt8>.allocate(capacity: dataLength)
         decryptedBytes.initialize(to: 0, count: dataLength)
-        decryptor.encrypt(input: encryptedBytes, output: decryptedBytes, length: dataLength)
+        decryptor.xor(input: encryptedBytes, output: decryptedBytes, length: dataLength)
         let decryptedResult = Data(bytes: decryptedBytes, count: dataLength)
         assertPairsEqual(expected: TestVector1.stream, actual: decryptedResult)
     }
@@ -514,13 +514,13 @@ class Salsa20CipherTests: XCTestCase {
         let encryptedBytes = UnsafeMutablePointer<UInt8>.allocate(capacity: dataLength)
         encryptedBytes.initialize(to: 0, count: dataLength)
         TestVector2.stream.withUnsafeBytes { (bytes: UnsafePointer<UInt8>) -> Void in
-            cryptor.encrypt(input: bytes, output: encryptedBytes, length: dataLength)
+            cryptor.xor(input: bytes, output: encryptedBytes, length: dataLength)
         }
 
         let decryptor: Salsa20Cipher! = try! Salsa20Cipher(withKey: TestVector2.key, iv: TestVector2.iv)
         let decryptedBytes = UnsafeMutablePointer<UInt8>.allocate(capacity: dataLength)
         decryptedBytes.initialize(to: 0, count: dataLength)
-        decryptor.encrypt(input: encryptedBytes, output: decryptedBytes, length: dataLength)
+        decryptor.xor(input: encryptedBytes, output: decryptedBytes, length: dataLength)
         let decryptedResult = Data(bytes: decryptedBytes, count: dataLength)
         assertPairsEqual(expected: TestVector2.stream, actual: decryptedResult)
     }
@@ -531,13 +531,13 @@ class Salsa20CipherTests: XCTestCase {
         let encryptedBytes = UnsafeMutablePointer<UInt8>.allocate(capacity: dataLength)
         encryptedBytes.initialize(to: 0, count: dataLength)
         TestVector3.stream.withUnsafeBytes { (bytes: UnsafePointer<UInt8>) -> Void in
-            cryptor.encrypt(input: bytes, output: encryptedBytes, length: dataLength)
+            cryptor.xor(input: bytes, output: encryptedBytes, length: dataLength)
         }
 
         let decryptor: Salsa20Cipher! = try! Salsa20Cipher(withKey: TestVector3.key, iv: TestVector3.iv)
         let decryptedBytes = UnsafeMutablePointer<UInt8>.allocate(capacity: dataLength)
         decryptedBytes.initialize(to: 0, count: dataLength)
-        decryptor.encrypt(input: encryptedBytes, output: decryptedBytes, length: dataLength)
+        decryptor.xor(input: encryptedBytes, output: decryptedBytes, length: dataLength)
         let decryptedResult = Data(bytes: decryptedBytes, count: dataLength)
         assertPairsEqual(expected: TestVector3.stream, actual: decryptedResult)
     }

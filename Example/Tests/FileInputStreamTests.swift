@@ -67,7 +67,7 @@ class FileInputStreamTests: XCTestCase {
 
     func testDataAvailable() {
         let fileHandle: FileHandle! = FileHandle(forReadingAtPath: TestConstants.filePath)
-        var fileStream = FileInputStream(withFileHandle: fileHandle)
+        let fileStream = FileInputStream(withFileHandle: fileHandle)
         var readData = Data()
         let len = 100
         let rawPointer = UnsafeMutableRawPointer.allocate(bytes: len, alignedTo: MemoryLayout<UInt8>.alignment)

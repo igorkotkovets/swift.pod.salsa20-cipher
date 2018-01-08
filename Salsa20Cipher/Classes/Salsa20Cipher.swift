@@ -33,7 +33,7 @@ public class Salsa20Cipher {
     var index = 0
     var state: UnsafeMutablePointer<UInt32>
 
-    public init?(withKey: Data, iv vector: Data, rounds: Rounds = .salsa2020) throws {
+    public init(withKey: Data, iv vector: Data, rounds: Rounds = .salsa2020) throws {
         self.rounds = rounds
 
         guard withKey.count == 16 || withKey.count == 32 else {
@@ -113,11 +113,9 @@ public class Salsa20Cipher {
             Salsa20Cipher.write(xstate+i, to: (state+i))
         }
 
-        xstate.deallocate(capacity: 16)
-    }
+        incrementCounter()
 
-    func encrypt(input inBuffer: UnsafePointer<UInt8>, output outBuffer: UnsafeMutablePointer<UInt8>, length: Int) {
-        xor(input: inBuffer, output: outBuffer, length: length)
+        xstate.deallocate(capacity: 16)
     }
 
     func getByte() -> UInt8 {
@@ -125,7 +123,6 @@ public class Salsa20Cipher {
 
         if index == 0 {
             salsa20()
-            incrementCounter()
         }
 
         value = Salsa20Cipher.read(state+(index/4), position: (index%4))
@@ -312,7 +309,7 @@ extension Salsa20Cipher: RandomGenerator {
         var result: ReturnType = 0
         withUnsafeMutablePointer(to: &result) { ptr -> Void in
             let count = MemoryLayout<ReturnType>.size
-            ptr.withMemoryRebound(to: UInt8.self, capacity: count) { (byte) -> Void in
+            ptr.withMemoryRebound(to: UInt8.self, capacity: count) { byte -> Void in
                 for i in 0..<count {
                     (byte+i).pointee = getByte()
                 }

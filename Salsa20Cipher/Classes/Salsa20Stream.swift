@@ -22,7 +22,7 @@ public class Salsa20Stream: InputStream {
         return !eofReached
     }
 
-    public init?(withStream: InputStream, key: Data, iv vector: Data) throws {
+    public init(withStream: InputStream, key: Data, iv vector: Data) throws {
         self.inputStream = withStream
         cipher = try Salsa20Cipher(withKey: key, iv: vector)
         inputBuffer = UnsafeMutablePointer.allocate(capacity: blockSize)
@@ -69,7 +69,7 @@ public class Salsa20Stream: InputStream {
         if inputBytes < blockSize {
             eofReached = true
         }
-        cipher.encrypt(input: inputBuffer, output: outputBuffer, length: inputBytes)
+        cipher.xor(input: inputBuffer, output: outputBuffer, length: inputBytes)
         bufferSize += inputBytes
         return true
     }
@@ -98,7 +98,7 @@ public extension Data {
             var resultData = Data(count: self.count)
             var readLength: Int?
             resultData.withUnsafeMutableBytes { (bytes: UnsafeMutablePointer<UInt8>) -> Void in
-                readLength = salsa20Stream?.read(bytes, maxLength: self.count)
+                readLength = salsa20Stream.read(bytes, maxLength: self.count)
             }
 
             guard readLength == self.count else {
