@@ -31,7 +31,5 @@ Specification is available at https://cr.yp.to/snuffle/spec.pdf
 
   s.ios.deployment_target = '8.0'
 
-  s.source_files = 'Salsa20Cipher/Classes/**/*.swift'
-  s.preserve_paths = 'Sources/CommonCrypto/module.modulemap'
-  s.xcconfig = { 'SWIFT_INCLUDE_PATHS' => '$(PODS_ROOT)/../../Salsa20Cipher/Classes/CommonCrypto' }
+  s.source_files = 'Salsa20Cipher/*.swift'
 end
