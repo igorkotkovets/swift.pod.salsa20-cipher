@@ -32,6 +32,7 @@ public class Salsa20Cipher {
     public let rounds: Rounds
     var index = 0
     var state: UnsafeMutablePointer<UInt32>
+    var keyStream: UnsafeMutablePointer<UInt8>
 
     public init(withKey: Data, iv vector: Data, rounds: Rounds = .salsa2020) throws {
         self.rounds = rounds
@@ -40,13 +41,14 @@ public class Salsa20Cipher {
             throw Salsa20CryptorError.invalidKeySize
         }
 
+        keyStream = UnsafeMutablePointer<UInt8>.allocate(capacity: 64)
         state = UnsafeMutablePointer<UInt32>.allocate(capacity: 16)
         state.initialize(to: 0, count: 16)
         withKey.withUnsafeBytes { (bytes: UnsafePointer<UInt8>) -> Void in
             if withKey.count == 32 {
-                set32BytesKey(bytes)
+                expand32BytesKey(bytes)
             } else if withKey.count == 16 {
-                set16BytesKey(bytes)
+                expand16BytesKey(bytes)
             }
         }
 
@@ -60,10 +62,11 @@ public class Salsa20Cipher {
     }
 
     deinit {
+        keyStream.deallocate(capacity: 64)
         state.deallocate(capacity: 16)
     }
 
-    func set32BytesKey(_ key: UnsafePointer<UInt8>) {
+    func expand32BytesKey(_ key: UnsafePointer<UInt8>) {
         state[00] = Salsa20Cipher.SIGMA[00]
         state[01] = Salsa20Cipher.read(key+00)
         state[02] = Salsa20Cipher.read(key+04)
@@ -78,7 +81,7 @@ public class Salsa20Cipher {
         state[15] = Salsa20Cipher.SIGMA[03]
     }
 
-    func set16BytesKey(_ key: UnsafePointer<UInt8>) {
+    func expand16BytesKey(_ key: UnsafePointer<UInt8>) {
         state[00] = Salsa20Cipher.TAU[00]
         state[01] = Salsa20Cipher.read(key+00, count: 2)
         state[02] = Salsa20Cipher.read(key+02, count: 2)
@@ -110,7 +113,7 @@ public class Salsa20Cipher {
 
         for i in 0..<16 {
             xstate[i] = xstate[i]&+state[i]
-            Salsa20Cipher.write(xstate+i, to: (state+i))
+            Salsa20Cipher.write(xstate+i, to: (keyStream+i*4))
         }
 
         incrementCounter()
@@ -119,13 +122,11 @@ public class Salsa20Cipher {
     }
 
     func getByte() -> UInt8 {
-        let value: UInt8
-
         if index == 0 {
             salsa20()
         }
 
-        value = Salsa20Cipher.read(state+(index/4), position: (index%4))
+        let value = (keyStream+index).pointee
         index = (index + 1) & 0x3F
 
         return value
@@ -191,12 +192,6 @@ extension Salsa20Cipher {
             }
         }
         return uint32
-    }
-
-    static func read(_ uint32Ptr: UnsafePointer<UInt32>, position: Int) -> UInt8 {
-        return uint32Ptr.withMemoryRebound(to: UInt8.self, capacity: 4) { (bytes) -> UInt8 in
-            return bytes[3-position]
-        }
     }
 
     static func xor(keyBuffer: UnsafePointer<UInt8>,
